@@ -19,4 +19,8 @@ server.use("/api/auth", authRouter);
 server.use("/api/contacts", contactsRouter);
 server.use("/api/users", usersRouter);
 
+server.get("/", (req, res) => {
+  res.send("Welcome!");
+});
+
 module.exports = server;

@@ -1,27 +1,10 @@
 //inside this file should be register, login and token generate functions to the route /api/auth/
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const secrets = require("../config/secrets");
 const jwt = require("jsonwebtoken");
 
 const Users = require("../users/users-model.js");
-
-router.post("/login", (req, res) => {
-  let { username, password } = req.body;
-  Users.findBy({ username })
-    .first()
-    .then(user => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = generateToken(user);
-        res.status(200).json({ message: `Welcome, ${user.username}!`, token });
-      } else {
-        res.status(401).json({ message: "invalid credentials" });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ message: "trouble logging in" });
-    });
-});
+const secrets = require("../config/secrets.js");
 
 router.post("/register", (req, res) => {
   let user = req.body;
@@ -40,6 +23,24 @@ router.post("/register", (req, res) => {
       });
   }
 });
+
+router.post("/login", (req, res) => {
+  let { username, password } = req.body;
+  Users.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = genToken(user);
+        res.status(200).json({ message: `Welcome, ${user.username}!`, token });
+      } else {
+        res.status(401).json({ message: "invalid credentials" });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ message: "trouble logging in" });
+    });
+});
+
 router.get("/logout", async (req, res) => {
   if (req.session) {
     req.session.destroy(err => {
@@ -64,7 +65,7 @@ function genToken(user) {
     username: user.username
   };
   const options = {
-    expiresIn: "1h"
+    expiresIn: "1d"
   };
 
   return jwt.sign(payload, secrets.jwtSecret, options);

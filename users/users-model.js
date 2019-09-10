@@ -13,12 +13,12 @@ function find() {
 }
 
 function findBy(filter) {
-  return db("users").where("filter");
+  return db("users").where(filter);
 }
 
 function findById(id) {
   return db("users")
-    .where("id")
+    .where({ id })
     .first();
 }
 

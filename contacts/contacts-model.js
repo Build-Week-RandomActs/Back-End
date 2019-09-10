@@ -1,5 +1,4 @@
 //functions for find/findBy/add/delete/etc. here
-  
 
 const db = require("../database/dbConfig.js");
 
