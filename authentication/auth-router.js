@@ -3,20 +3,6 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const db = require('../database/dbConfig.js')
 const secrets = require('../config/secrets')
-const session = require('express-session')
-
-const sessionConfig = {
-  name: 'lambda school',
-  secret: 'learn to code, code to learn',
-  cookie: {
-    maxAge: 1000 * 60 * 60,
-    secure: false,
-    httpOnly: true,
-  },
-  resave: false,
-  saveUninitialized: false
-}
-router.use(session(sessionConfig))
 
 router.post('/login', async (req, res) => {
   const {
