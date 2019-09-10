@@ -43,18 +43,22 @@ router.put("/contacts:id", restricted, async (req, res) => {
   }
 });
 
-router.delete('/contacts:id', restricted, async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const count = await db('contacts').where({ id }).del();
-  
-      if (count) {
-        res.json({ removed: count });
-      } else {
-        res.status(404).json({ message: 'Could not find contact with given id' });
-      }
-    } catch (err) {
-      res.status(500).json({ message: 'Failed to delete contact' });
+router.delete("/contacts:id", restricted, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const count = await db("contacts")
+      .where({ id })
+      .del();
+
+    if (count) {
+      res.json({ removed: count });
+    } else {
+      res.status(404).json({ message: "Could not find contact with given id" });
     }
-  });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete contact" });
+  }
+});
+
+module.exports = router;

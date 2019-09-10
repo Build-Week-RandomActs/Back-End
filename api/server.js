@@ -1,21 +1,20 @@
 //server to routes
-const express = require('express')
-const cors = require('cors')
-const helmet = require('helmet')
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
 
-const actsRouter = require('../acts/acts-router.js')
-const authenticate = require('../authentication/restricted-middleware.js')
-const authRouter = require('../authentication/auth-router.js')
-const contactsRouter = require('../contacts/contacts-router.js')
+const actsRouter = require("../acts/acts-router.js");
+const authRouter = require("../authentication/auth-router.js");
+const contactsRouter = require("../contacts/contacts-router.js");
 
-const server = express()
+const server = express();
 
-server.use(helmet())
-server.use(cors())
-server.use(express.json())
+server.use(helmet());
+server.use(cors());
+server.use(express.json());
 
-server.use('/api/acts', authenticate, actsRouter)
-server.use('/api/auth', authenticate, authRouter)
-server.use('/api/contacts', authenticate, contactsRouter)
+server.use("/api/acts", actsRouter);
+server.use("/api/auth", authRouter);
+server.use("/api/contacts", contactsRouter);
 
-module.exports = server
+module.exports = server;

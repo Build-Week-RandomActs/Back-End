@@ -16,7 +16,7 @@ router.get("/", restricted, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", restricted, async (req, res) => {
   try {
     const act = await Acts.findbyId(req.params.id);
     if (act) {
@@ -43,3 +43,5 @@ router.put("/:id", restricted, async (req, res) => {
     res.status(500).json({ message: "The act could not be updated" });
   }
 });
+
+module.exports = router;
