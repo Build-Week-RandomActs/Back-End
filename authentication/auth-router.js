@@ -1,52 +1,43 @@
 //inside this file should be register, login and token generate functions to the route /api/auth/
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
-const db = require("../database/dbConfig.js");
 const secrets = require("../config/secrets");
+const jwt = require("jsonwebtoken");
+
+const Users = require("../users/users-model.js");
 
 router.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  const user = db("users")
-    .where({
-      username
+  let { username, password } = req.body;
+  Users.findBy({ username })
+    .first()
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        const token = generateToken(user);
+        res.status(200).json({ message: `Welcome, ${user.username}!`, token });
+      } else {
+        res.status(401).json({ message: "invalid credentials" });
+      }
     })
-    .first();
-  try {
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const token = genToken(user);
-      res.status(200).json({
-        message: `Welcome ${user.username}`,
-        token
-      });
-    } else {
-      res.status(404).json({
-        message: `Invalid credentials`
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
-  }
+    .catch(error => {
+      res.status(500).json({ message: "trouble logging in" });
+    });
 });
+
 router.post("/register", (req, res) => {
-  const user = req.body;
+  let user = req.body;
   const hash = bcrypt.hashSync(user.password, 12);
   user.password = hash;
-  try {
-    if (!user.username || !user.password || !user.email) {
-      res.json({
-        message: "All fields must be filled in"
+
+  if (!user.username || !user.password || !user.email) {
+    res.status(401).json({ message: "Please fill in all fields" });
+  } else {
+    Users.add(user)
+      .then(saved => {
+        res.status(201).json(saved);
+      })
+      .catch(error => {
+        res.status(500).json({ message: "could not register user" });
       });
-    } else {
-      const newUser = db("users").insert(user);
-      res.status(201).json({
-        message: `Welcome aboard ${user.username}!`,
-        newUser
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json(err);
   }
 });
 router.get("/logout", async (req, res) => {
