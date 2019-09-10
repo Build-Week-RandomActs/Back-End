@@ -5,7 +5,7 @@ const db = require("../database/dbConfig.js");
 module.exports = {
   add,
   update,
-  findBy,
+  find,
   findById
 };
 
