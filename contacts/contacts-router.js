@@ -30,7 +30,7 @@ router.get("/contacts:id", restricted, async (req, res) => {
 
 router.put("/contacts:id", restricted, async (req, res) => {
   try {
-    const changed = await Acts.update(req.params.id, req.body);
+    const changed = await Contacts.update(req.params.id, req.body);
     if (changed) {
       res.status(200).json(contact);
     } else {
