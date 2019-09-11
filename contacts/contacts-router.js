@@ -6,7 +6,7 @@ const restricted = require("../authentication/restricted-middleware.js");
 
 const router = express.Router();
 
-router.get("/contacts", restricted, async (req, res) => {
+router.get("/", restricted, async (req, res) => {
   try {
     const contacts = await Contacts.find(req.query);
     res.status(200).json(contacts);
@@ -15,9 +15,9 @@ router.get("/contacts", restricted, async (req, res) => {
   }
 });
 
-router.get("/contacts:id", restricted, async (req, res) => {
+router.get("/:id", restricted, async (req, res) => {
   try {
-    const contact = await Contacts.findbyId(req.params.id);
+    const contact = await Contacts.findById(req.params.id);
     if (contact) {
       res.status(200).json(contact);
     } else {
@@ -28,10 +28,14 @@ router.get("/contacts:id", restricted, async (req, res) => {
   }
 });
 
-router.put("/contacts:id", restricted, async (req, res) => {
+router.put("/:id", restricted, async (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
   try {
-    const changed = await Acts.update(req.params.id, req.body);
-    if (changed) {
+    const contact = await Contacts.findById(id);
+    if (contact) {
+      const updatedContact = await Contacts.update(changes, id);
       res.status(200).json(contact);
     } else {
       res
@@ -43,7 +47,7 @@ router.put("/contacts:id", restricted, async (req, res) => {
   }
 });
 
-router.delete("/contacts:id", restricted, async (req, res) => {
+router.delete("/:id", restricted, async (req, res) => {
   const { id } = req.params;
 
   try {

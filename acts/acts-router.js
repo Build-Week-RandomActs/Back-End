@@ -18,7 +18,7 @@ router.get("/", restricted, async (req, res) => {
 
 router.get("/:id", restricted, async (req, res) => {
   try {
-    const act = await Acts.findbyId(req.params.id);
+    const act = await Acts.findById(req.params.id);
     if (act) {
       res.status(200).json(act);
     } else {
@@ -30,10 +30,14 @@ router.get("/:id", restricted, async (req, res) => {
 });
 
 router.put("/:id", restricted, async (req, res) => {
+  const { id } = req.params;
+  const changes = req.body;
+
   try {
-    const changed = await Acts.update(req.params.id, req.body);
-    if (changed) {
-      res.status(200).json(act);
+    const act = await Acts.findById(id);
+    if (act) {
+      const updatedAct = await Acts.update(changes, id);
+      res.status(200).json(updatedAct);
     } else {
       res
         .status(404)

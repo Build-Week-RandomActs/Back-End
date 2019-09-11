@@ -15,7 +15,7 @@ function find() {
 
 function findById(id) {
   return db("acts")
-    .where("id")
+    .where({ id })
     .first();
 }
 
@@ -24,8 +24,8 @@ async function add(act) {
   return findById(id);
 }
 
-function update(id, changes) {
+function update({ description }, id) {
   return db("acts")
     .where({ id })
-    .update({ changes });
+    .update({ description });
 }
