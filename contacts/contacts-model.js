@@ -19,7 +19,7 @@ function findById(id) {
     .first();
 }
 
-async function add(act) {
+async function add(contact) {
   const [id] = await db("contacts").insert(contact);
   return findById(id);
 }

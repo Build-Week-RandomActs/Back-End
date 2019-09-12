@@ -29,6 +29,23 @@ router.get("/:id", restricted, async (req, res) => {
   }
 });
 
+router.post("/", restricted, async (req, res) => {
+  let { contact_id, description } = req.body;
+
+  try {
+    const addedAct = Acts.add({ contact_id, description });
+    if (!contact_id || !description) {
+      res.status(400).json({
+        error: "please provide contact and description for this act"
+      });
+    } else {
+      res.status(200).json(addedAct);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "could not add act " });
+  }
+});
+
 router.put("/:id", restricted, async (req, res) => {
   const { id } = req.params;
   const changes = req.body;
