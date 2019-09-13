@@ -79,3 +79,16 @@ describe("Add", () => {
 //       });
 //   });
 // });
+
+// describe("GET /users", function() {
+//   it("responds with json", function() {
+//     return request(server)
+//       .get("/users")
+//       .set("Accept", "application/json")
+//       .expect("Content-Type", /json/)
+//       .expect(200)
+//       .then(response => {
+//         assert(response.body.email, "foo@bar.com");
+//       });
+//   });
+// });
